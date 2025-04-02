@@ -1,0 +1,26 @@
+<div class="tree-container">
+  <ng-container *ngTemplateOutlet="nodeTemplate; context: { $implicit: nodes }"></ng-container>
+</div>
+
+<ng-template #nodeTemplate let-nodes>
+  <ul class="tree-list">
+    <li *ngFor="let node of nodes" [class.deleted]="node.is_deleted">
+      <div class="node-content">
+        <span 
+          *ngIf="hasChildren(node)" 
+          class="toggle-icon" 
+          (click)="toggleNode(node.id)"
+        >
+          <span *ngIf="isExpanded(node.id)">&#9650;</span>
+          <span *ngIf="!isExpanded(node.id)">&#9660;</span>
+        </span>
+        <span *ngIf="!hasChildren(node)" class="empty-icon"></span>
+        <span class="node-info">{{ node.id }} - {{ node.title }}</span>
+      </div>
+      
+      <div *ngIf="isExpanded(node.id) && hasChildren(node)" class="child-nodes">
+        <ng-container *ngTemplateOutlet="nodeTemplate; context: { $implicit: node.children }"></ng-container>
+      </div>
+    </li>
+  </ul>
+</ng-template>
